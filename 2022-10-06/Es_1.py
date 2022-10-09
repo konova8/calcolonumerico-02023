@@ -133,7 +133,6 @@ my_x = LA.solve(L.T, y)
 print('my_x = ', my_x)
 print('norm =', LA.norm(x-my_x, 'fro'))
 
-'''
 
 
 """4. Choleski con matrice di Hilbert"""
@@ -147,12 +146,12 @@ import scipy.linalg as LA
 # help (scipy.linalg.hilbert)
 
 # crazione dati e problema test
-n = ...
-A = scipy.linalg.hilbert ...
-x = ...
-b = ...
+n = 5
+A = LA.hilbert(n)
+x = np.ones((n, 1))
+b = np.dot(A, x)
 
-condA = ...
+condA = np.linalg.cond(A)
 
 print('x: \n', x , '\n')
 print('x.shape: ', x.shape, '\n' )
@@ -163,19 +162,23 @@ print('A.shape: ', A.shape, '\n' )
 print('K(A)=', condA, '\n')
 
 # decomposizione di Choleski
-L = scipy.linalg.cholesky ...
+L = LA.cholesky(A, lower = True)
 print('L:', L, '\n')
 
-print('L.T*L =', ...
-print('err = ', scipy.linalg.norm(A-np.matmul(L, np.transpose(L)), 'fro'))
+print('L.T*L =', np.dot(L.T, L))
+print('err = ', LA.norm(A-np.matmul(L, np.transpose(L)), 'fro'))
 
-y = ...
-my_x = ...
+# L * y = b
+# y = L^T * x  ->  L^T * x = y
+
+y = LA.solve(L, b, lower = True)
+my_x = LA.solve(L.T, y)
 print('my_x = \n ', my_x)
 
-print('norm =', scipy.linalg.norm(x-my_x, 'fro'))
+print('norm =', LA.norm(x-my_x, 'fro'))
 
 
+'''
 
 """5. Choleski con matrice di matrice tridiagonale simmetrica e definita positiva """
 
