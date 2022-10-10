@@ -103,7 +103,7 @@ import scipy.linalg as LA
 # help (scipy.linalg.solve)
 
 # crazione dati e problema test
-A = np.array ([ [3,-1, 1,-2], [0, 2, 5, -1], [1, 0, -7, 1], [0, 2, 1, 1]  ], dtype=np.float)
+A = np.array ([ [3,-1, 1,-2], [0, 2, 5, -1], [1, 0, -7, 1], [0, 2, 1, 1]  ], dtype=np.float64)
 A = np.matmul(np.transpose(A), A)               # A^T * A è simmetrica e definita positiva
 x = np.ones((4,1))
 b = np.dot(A, x)
@@ -178,26 +178,27 @@ print('my_x = \n ', my_x)
 print('norm =', LA.norm(x-my_x, 'fro'))
 
 
-'''
 
 """5. Choleski con matrice di matrice tridiagonale simmetrica e definita positiva """
 
 import numpy as np
 import scipy
 # help (scipy)
-import scipy.linalg
+import scipy.linalg as LA
 # help (scipy.linalg)
 # help (scipy.linalg.cholesky)
 # help (np.diag)
 
 # crazione dati e problema test
-n = ...
-A = np.diag(...) + ...
+n = 4
+A = np.array([[3, -1, 0, 0],[1, 2, 5, 0],[0, 1, -7 ,1],[0, 0, 1, 1]], dtype = np.float64)
+#A = np.diag(np.ones(n), k=0) + np.diag(np.ones(n-1), k=1) + np.diag(np.ones(n-1), k=-1)
+#print('Original A: \n', A, '\n')
 A = np.matmul(A, np.transpose(A))
-x = ...
-b = ...
+x = np.ones((n, 1))
+b = np.dot(A, x)
 
-condA = ...
+condA = np.linalg.cond(A)
 
 print('x: \n', x , '\n')
 print('x.shape: ', x.shape, '\n' )
@@ -208,20 +209,24 @@ print('A.shape: ', A.shape, '\n' )
 print('K(A)=', condA, '\n')
 
 # decomposizione di Choleski
-L = scipy.linalg.cholesky ...
+L = LA.cholesky(A, lower=True)
 print('L:', L, '\n')
 
-print('L.T*L =', ...
-print('err = ', scipy.linalg.norm(A-np.matmul(L, np.transpose(L)), 'fro'))
+print('L*L.T =', np.dot(L, L.T))
+print('err = ', LA.norm(A-np.matmul(L, np.transpose(L)), 'fro'))
 
-y = ...
-my_x = ...
+# L * y = b
+# y = L^T * x  ->  L^T * x = y
+
+y = LA.solve(L, b, lower=True)
+my_x = LA.solve(L.T, y)
 print('my_x = \n ', my_x)
 
-print('norm =', scipy.linalg.norm(x-my_x, 'fro'))
+print('norm =', LA.norm(x-my_x, 'fro'))
 
 
 
+'''
 
 """6. plots """
 
