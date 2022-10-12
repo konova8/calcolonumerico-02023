@@ -1,5 +1,6 @@
 """1. matrici e norme """
 
+from random import seed
 import numpy as np
 
 #help(np.linalg) # View source
@@ -191,9 +192,7 @@ import scipy.linalg as LA
 
 # crazione dati e problema test
 n = 4
-A = np.array([[3, -1, 0, 0],[1, 2, 5, 0],[0, 1, -7 ,1],[0, 0, 1, 1]], dtype = np.float64)
-#A = np.diag(np.ones(n), k=0) + np.diag(np.ones(n-1), k=1) + np.diag(np.ones(n-1), k=-1)
-#print('Original A: \n', A, '\n')
+A = np.zeros((n, n)) + np.diag(np.full(n, fill_value = 9)) + np.diag(np.full(n-1, fill_value = -4), k = 1) + np.diag(np.full(n-1, fill_value = -4), k = -1)
 A = np.matmul(A, np.transpose(A))
 x = np.ones((n, 1))
 b = np.dot(A, x)
@@ -226,7 +225,6 @@ print('norm =', LA.norm(x-my_x, 'fro'))
 
 
 
-'''
 
 """6. plots """
 
@@ -239,35 +237,35 @@ Err = np.zeros((20,1))
 
 for n in np.arange(10,30):
     # crazione dati e problema test
-    A = ...
-    x = ...
-    b = ...
+    A = np.random.randn(n, n)
+    x = np.ones((n, 1))
+    b = np.dot(A, x)
     
     # numero di condizione 
-    K_A[n-10] = ...
+    K_A[n-10] = np.linalg.cond(A)
     
     # fattorizzazione 
-    lu ,piv = ...
-    my_x = ...
+    lu, piv = LA.lu_factor(A)
+    my_x = LA.lu_solve((lu, piv), b)
     
     # errore relativo
-    Err[n-10] = ...
+    Err[n-10] = LA.norm(my_x - x, ord=2) / LA.norm(x, ord=2)
   
 x = np.arange(10,30)
 
 # grafico del numero di condizione vs dim
-plt.plot(...)
+plt.plot(x, K_A)
 plt.title('CONDIZIONAMENTO DI A ')
 plt.xlabel('dimensione matrice: n')
+plt.xticks(x)
 plt.ylabel('K(A)')
 plt.show()
 
 
 # grafico errore in norma 2 in funzione della dimensione del sistema
-plt.plot(...)
+plt.plot(x, Err)
 plt.title('Errore relativo')
 plt.xlabel('dimensione matrice: n')
-plt.ylabel('Err= ||my_x-x||/||x||')
+plt.xticks(x)
+plt.ylabel('Err = ||my_x-x||/||x||')
 plt.show()
-
-'''
